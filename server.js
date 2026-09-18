@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 
 // Only these files are public. Never serve the project directory or .env.
 const assets = new Map([
@@ -17,7 +18,7 @@ function json(res, status, body) {
   res.end(JSON.stringify(body));
 }
 
-export const server = createServer(async (req, res) => {
+export default async function handler(req, res) {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Referrer-Policy', 'no-referrer');
   res.setHeader('Content-Security-Policy', "default-src 'self'; img-src 'self' https: data:; style-src 'self'; script-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
@@ -32,7 +33,7 @@ export const server = createServer(async (req, res) => {
         return json(res, 400, { error: 'Enter a recipe name (up to 100 characters) and valid filters.' });
       }
       if (!key || key === 'replace_with_your_api_key') {
-        return json(res, 503, { error: 'Add your Spoonacular API key to .env, then restart the server.' });
+        return json(res, 503, { error: 'Set SPOONACULAR_API_KEY in your server environment (.env locally or Vercel Environment Variables), then restart or redeploy.' });
       }
       const upstream = new URL('https://api.spoonacular.com/recipes/complexSearch');
       upstream.search = new URLSearchParams({ query, number: '12', addRecipeInformation: 'true', instructionsRequired: 'true', ...(diet && { diet }), ...(time && { maxReadyTime: time }) });
@@ -63,6 +64,9 @@ export const server = createServer(async (req, res) => {
     // Do not log upstream requests or credentials.
     json(res, 502, { error: 'Could not reach the recipe service. Please try again.' });
   }
-});
+}
 
-server.listen(port, '127.0.0.1', () => console.log(`Smart Recipe Finder: http://localhost:${port}`));
+// Vercel imports the handler. Only a direct local invocation opens a port.
+if (!process.env.VERCEL && process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  createServer(handler).listen(port, '127.0.0.1', () => console.log(`Smart Recipe Finder: http://localhost:${port}`));
+}
