@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Find your next meal with recipes that fit your taste and your time.">
+  <title>Smart Recipe Finder</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231b493c'/%3E%3Ctext x='5' y='24' font-size='24' fill='white'%3ES%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/recipe.js" defer></script>
+</head>
+<body>
+  <header><a class="brand" href="/">smart<span>recipe</span><span class="brand-mark">✳</span></a><span class="header-note">A little inspiration for every appetite.</span></header>
+  <main>
+    <section class="search-panel" aria-labelledby="page-title">
+      <p class="eyebrow">FIND YOUR NEXT FAVOURITE</p>
+      <h1 id="page-title">Good food.<br><em>Less guesswork.</em></h1>
+      <p class="intro">What are you craving? Find something delicious to make.</p>
+      <form id="search-form">
+        <label for="query">Recipe or ingredient</label>
+        <div class="search-row"><input id="query" name="query" type="search" placeholder="Try pasta, chicken or mushrooms…" maxlength="100" required><button id="search-button" type="submit">Find recipes <span aria-hidden="true">↗</span></button></div>
+        <div class="filters">
+          <div><label for="diet">Eating preference</label><select id="diet" name="diet"><option value="">Anything delicious</option><option value="vegetarian">Vegetarian</option><option value="vegan">Vegan</option><option value="gluten free">Gluten free</option><option value="ketogenic">Ketogenic</option></select></div>
+          <div><label for="time">Time in the kitchen</label><select id="time" name="maxReadyTime"><option value="">No time limit</option><option value="15">Up to 15 minutes</option><option value="30">Up to 30 minutes</option><option value="60">Up to 60 minutes</option></select></div>
+        </div>
+      </form>
+      <div class="suggestions"><span>A place to start</span><button type="button" data-query="pasta">Pasta</button><button type="button" data-query="chicken">Chicken</button><button type="button" data-query="salad">Salads</button></div>
+    </section>
+    <section class="results-section" aria-labelledby="results-title">
+      <div class="results-heading"><h2 id="results-title">Your next great meal</h2><span id="result-count"></span></div>
+      <p id="status" role="status" aria-live="polite">Search for a favourite dish or an ingredient you have on hand.</p>
+      <div id="results" class="recipe-grid" aria-busy="false"></div>
+    </section>
+  </main>
+  <footer><span>Made for everyday cooking.</span><a href="https://spoonacular.com/food-api" target="_blank" rel="noopener noreferrer">Recipes by Spoonacular ↗</a></footer>
+</body>
+</html>
